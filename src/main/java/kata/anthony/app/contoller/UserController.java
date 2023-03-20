@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/users")
-    public String printCars(ModelMap model) {
+    public String printUsers(ModelMap model) {
         model.addAttribute("users", userService.getAll());
         return "users";
     }
