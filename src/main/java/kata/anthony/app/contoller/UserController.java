@@ -34,7 +34,7 @@ public class UserController {
     @PostMapping()
     public String submitNewUserForm(@ModelAttribute("user") User user) {
         userService.add(user);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
     @GetMapping("/users/{id}/edit")

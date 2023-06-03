@@ -1,53 +1,44 @@
 package kata.anthony.app.dao;
 
 import kata.anthony.app.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    @Autowired
-    private EntityManagerFactory entityManagerFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public void add(User user) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
         entityManager.persist(user);
-        entityManager.getTransaction().commit();
+        entityManager.flush();
     }
 
     @Override
     public void update(User user) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
         entityManager.merge(user);
-        entityManager.getTransaction().commit();
+        entityManager.flush();
     }
 
     @Override
     public User get(long id) {
-        return entityManagerFactory.createEntityManager().find(User.class, id);
+        return entityManager.find(User.class, id);
     }
 
     @Override
     public void delete(long id) {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        User user = entityManager.find(User.class, id);
+        User user = get(id);
         entityManager.remove(user);
-        entityManager.getTransaction().commit();
+        entityManager.flush();
     }
 
     @Override
     public List<User> getAll() {
-        Query query = entityManagerFactory.createEntityManager().createQuery("from User");
-        return query.getResultList();
+        return  entityManager.createQuery("SELECT u from User u", User.class).getResultList();
     }
 }
