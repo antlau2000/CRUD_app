@@ -4,6 +4,7 @@ import kata.anthony.app.model.User;
 import kata.anthony.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,42 +18,42 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/users")
-    public String printCars(ModelMap model) {
+    @GetMapping("/")
+    public String getAllUsers(ModelMap model) {
         model.addAttribute("users", userService.getAll());
         return "users";
     }
 
-    @GetMapping("/new")
-    public String newUserForm(ModelMap model) {
+    @GetMapping("/users/new")
+    public String newUserForm(Model model) {
         User user = new User();
         model.addAttribute("user", user);
         return "new_user";
     }
 
-    @PostMapping("/new")
+    @PostMapping()
     public String submitNewUserForm(@ModelAttribute("user") User user) {
         userService.add(user);
         return "redirect:/users";
     }
 
-    @GetMapping("/edit")
-    public String editUserFrom(ModelMap model, @RequestParam(value = "id") long id) {
+    @GetMapping("/users/{id}/edit")
+    public String edit(Model model, @PathVariable("id") Long id) {
         User user = userService.get(id);
         model.addAttribute("user", user);
         return "edit_user";
     }
 
-    @PostMapping("/edit")
-    public String submitEditUserForm(@ModelAttribute("user") User user) {
+    @PatchMapping("/users/{id}")
+    public String update(@ModelAttribute("user") User user) {
         userService.update(user);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
-    @RequestMapping("/delete")
-    public String deleteUser(@RequestParam("id") long id) {
+    @DeleteMapping("/users/{id}")
+    public String delete(@PathVariable("id") Long id) {
         userService.delete(id);
-        return "redirect:/users";
+        return "redirect:/";
     }
 
 }
