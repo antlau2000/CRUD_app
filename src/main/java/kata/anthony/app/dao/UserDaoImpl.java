@@ -16,13 +16,11 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void add(User user) {
         entityManager.persist(user);
-        entityManager.flush();
     }
 
     @Override
     public void update(User user) {
         entityManager.merge(user);
-        entityManager.flush();
     }
 
     @Override
@@ -34,7 +32,6 @@ public class UserDaoImpl implements UserDao {
     public void delete(long id) {
         User user = get(id);
         entityManager.remove(user);
-        entityManager.flush();
     }
 
     @Override
